@@ -1,4 +1,69 @@
+#=============================================================================#
+#MIT License
 
+#Copyright (c) 2023 沉默の金
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+#=============================================================================#
+
+name: Build OpenWrt-K
+on:
+  schedule:
+    - cron: '0 4 * * *'
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '.github/**'
+#      - 'files/**'
+#      - '!README.md'
+#  pull_request:
+#            branches:
+#              - main
+#            paths:
+#              - 'config/**'
+#              - '.github/**'
+#              - 'files/**'
+#              - '!README.md'
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: write
+  discussions: write
+jobs:
+  planning:
+    outputs:
+      matrix: ${{ steps.planning.outputs.matrix }}
+      starttime: ${{ steps.time.outputs.starttime }}
+    runs-on: ubuntu-22.04
+    steps:
+    - name: 记录开始时间
+      id: time
+      run: |
+        sudo timedatectl set-timezone "Asia/Shanghai"
+        starttime=$(date +"%y.%m.%d-%H")
+        echo starttime=$starttime >> "$GITHUB_OUTPUT"
+        echo starttime=$starttime >> "$GITHUB_ENV"
+        echo "::notice ::编译开始时间为：$starttime"
+
+    - name: 将存储库签出到运行器
+      uses: actions/checkout@v4
 name: '规划'
 description: '规划编译流程'
 outputs:
